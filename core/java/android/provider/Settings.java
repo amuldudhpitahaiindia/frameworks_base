@@ -7919,7 +7919,6 @@ public final class Settings {
          * 0 - Automatic (Wallpaper based)
          * 1 - Light
          * 2 - Dark
-         * 3 - Black
          * @hide
          */
         public static final String SYSTEM_THEME = "system_theme";

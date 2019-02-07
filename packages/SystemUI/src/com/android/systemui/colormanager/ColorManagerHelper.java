@@ -33,13 +33,8 @@ public class ColorManagerHelper {
     public static final String TAG = "ColorManagerHelper";
 
     // Theme Packages
-    private static final String THEME_BLACK = "co.aoscp.theme.black";
     private static final String THEME_DARK = "co.aoscp.theme.dark";
 
-    public static final String[] BLACK_THEME = {
-            "co.aoscp.theme.black",
-            "co.aoscp.theme.settings.black",
-    };
     public static final String[] DARK_THEME = {
             "co.aoscp.theme.dark",
             "co.aoscp.theme.settings.dark",
@@ -108,26 +103,7 @@ public class ColorManagerHelper {
         return themeInfo != null && themeInfo.isEnabled();
     }
 
-    public static boolean isUsingBlackTheme(IOverlayManager om, NotificationLockscreenUserManager lockUserManager) {
-        OverlayInfo themeInfo = null;
-        try {
-            themeInfo = om.getOverlayInfo(THEME_BLACK,
-                    lockUserManager.getCurrentUserId());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return themeInfo != null && themeInfo.isEnabled();
-    }
-
     public static void restoreDefaultTheme(IOverlayManager om, NotificationLockscreenUserManager lockUserManager) {
-        for (int i = 1; i < BLACK_THEME.length; i++) {
-            String blackTheme = BLACK_THEME[i];
-            try {
-                om.setEnabled(blackTheme, false, lockUserManager.getCurrentUserId());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
         for (int i = 1; i < DARK_THEME.length; i++) {
             String darkTheme = DARK_THEME[i];
             try {
@@ -156,9 +132,6 @@ public class ColorManagerHelper {
                 break;
             case 2:
                 om.setEnabled(THEME_DARK, true, lockUserManager.getCurrentUserId());
-                break;
-            case 3:
-                om.setEnabled(THEME_BLACK, true, lockUserManager.getCurrentUserId());
                 break;
         }
     }

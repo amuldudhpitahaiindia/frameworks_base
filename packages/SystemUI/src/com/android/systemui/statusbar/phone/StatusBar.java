@@ -2155,10 +2155,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                 themeInfo != null && themeInfo.isEnabled();
     }
 
-    public boolean isUsingBlackTheme() {
-        return ColorManagerHelper.isUsingBlackTheme(mOverlayManager, mLockscreenUserManager);
-    }
-
     @Nullable
     public View getAmbientIndicationContainer() {
         return mAmbientIndicationContainer;
@@ -2866,7 +2862,6 @@ public class StatusBar extends SystemUI implements DemoMode,
             pw.println("    overlay manager not initialized!");
         } else {
             pw.println("    dark overlay on: " + isUsingDarkTheme());
-            pw.println("    black overlay on: " + isUsingBlackTheme());
         }
         final boolean lightWpTheme = mContext.getThemeResId() == R.style.Theme_SystemUI_Light;
         pw.println("    light wallpaper theme: " + lightWpTheme);
@@ -3950,7 +3945,7 @@ public class StatusBar extends SystemUI implements DemoMode,
      */
     protected void updateTheme() {
         final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
-        // 0 = Auto, 1 = Light, 2 = Dark, 3 = Black
+        // 0 = Auto, 1 = Light, 2 = Dark
         final int systemTheme = Settings.Secure.getInt(mContext.getContentResolver(),
                 Settings.Secure.SYSTEM_THEME, 0);
 
@@ -3968,19 +3963,12 @@ public class StatusBar extends SystemUI implements DemoMode,
         switch (systemTheme) {
             case 1:
                 useDarkTheme = false;
-                useBlackTheme = false;
                 break;
             case 2:
                 useDarkTheme = true;
-                useBlackTheme = false;
-                break;
-            case 3:
-                useDarkTheme = false;
-                useBlackTheme = true;
                 break;
             default:
                 useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
-                useBlackTheme = false;
                 break;
         }
 
@@ -4003,20 +3991,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                                 useDarkTheme, mLockscreenUserManager.getCurrentUserId());
                     } catch (RemoteException e) {
                         Log.w(TAG, "Can't change theme", e);
-                    }
-                });
-            }
-        }
-
-        if (isUsingBlackTheme() != useBlackTheme) {
-            if (!mColorManagerAvailable) return;
-            for (String blackTheme: ColorManagerHelper.BLACK_THEME) {
-                mUiOffloadThread.submit(() -> {
-                    try {
-                        mOverlayManager.setEnabled(blackTheme,
-                                useBlackTheme, mLockscreenUserManager.getCurrentUserId());
-                    } catch (RemoteException e) {
-                        Log.d(TAG, "Can't change theme");
                     }
                 });
             }
